@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up as {{ user_type }} - JobBoard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen py-12 px-4">
+    <div class="w-full max-w-md">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2 text-center">Create {{ user_type }} Account</h1>
+        <p class="text-gray-600 mb-6 text-center">Fill out the form below to get started.</p>
+        
+        <form method="post" class="bg-white p-8 rounded-lg shadow-md space-y-6">
+            {% csrf_token %}
+            
+            <!-- This will render all the form fields -->
+            {{ form.as_p }}
+
+            <div>
+                <button type="submit" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-300">
+                    Create Account
+                </button>
+            </div>
+        </form>
+        <p class="text-center mt-4">
+            <a href="{% url 'register' %}" class="text-blue-500 hover:underline">Back to registration choice</a>
+        </p>
+    </div>
+</body>
+</html>
