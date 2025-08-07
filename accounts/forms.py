@@ -1,7 +1,7 @@
 # Path: /accounts/forms.py
 
 from django import forms
-from .models import User
+from .models import User, Applicant, Company
 
 # This form will be used for applicants signing up.
 class ApplicantSignUpForm(forms.ModelForm):
@@ -58,3 +58,11 @@ class CompanySignUpForm(forms.ModelForm):
             raise forms.ValidationError("Passwords do not match.")
         
         return cleaned_data
+    
+class CVUploadForm(forms.ModelForm):
+    class Meta:
+        model = Applicant
+        fields = ['cv']
+        labels = {
+            'cv': 'Upload your CV (PDF or Word document)',
+        }

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applicant Dashboard - JobBoard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="{% url 'job_list' %}" class="text-2xl font-bold text-blue-600">JobBoard</a>
+                <div class="flex items-center space-x-4">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'applicant_dashboard' %}" class="font-medium text-blue-600">Dashboard</a>
+                        <a href="{% url 'logout' %}" class="text-gray-500 hover:text-blue-600 font-medium">Logout</a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="text-gray-500 hover:text-blue-600 font-medium">Login</a>
+                        <a href="{% url 'register' %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">My Dashboard</h1>
+
+        <!-- Messages Display -->
+        {% if messages %}
+            <div class="mb-8">
+                {% for message in messages %}
+                    <div class="p-4 rounded-md bg-green-100 text-green-800" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- CV Upload Section -->
+        <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">My CV</h2>
+            {% if user.applicant.cv %}
+                <p class="text-gray-700">
+                    Current CV: <a href="{{ user.applicant.cv.url }}" class="text-blue-600 hover:underline" target="_blank">{{ user.applicant.cv.name|cut:"cvs/" }}</a>
+                </p>
+            {% else %}
+                <p class="text-gray-600">You have not uploaded a CV yet.</p>
+            {% endif %}
+            <form method="post" enctype="multipart/form-data" class="mt-4">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="mt-2 bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-300">
+                    Upload CV
+                </button>
+            </form>
+        </div>
+
+        <!-- My Applications Section -->
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">My Applications</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left py-3 px-4 font-semibold text-sm">Job Title</th>
+                            <th class="text-left py-3 px-4 font-semibold text-sm">Company</th>
+                            <th class="text-left py-3 px-4 font-semibold text-sm">Date Applied</th>
+                            <th class="text-left py-3 px-4 font-semibold text-sm">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for application in applications %}
+                        <tr class="border-b">
+                            <td class="py-3 px-4"><a href="{% url 'job_detail' application.job.pk %}" class="text-blue-600 hover:underline">{{ application.job.title }}</a></td>
+                            <td class="py-3 px-4">{{ application.job.company.name }}</td>
+                            <td class="py-3 px-4">{{ application.applied_at|date:"F d, Y" }}</td>
+                            <td class="py-3 px-4">
+                                <span class="px-2 py-1 font-semibold leading-tight text-yellow-700 bg-yellow-100 rounded-full">
+                                    {{ application.get_status_display }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-gray-500">You have not applied to any jobs yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

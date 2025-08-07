@@ -131,3 +131,5 @@ AUTH_USER_MODEL = 'accounts.User'
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'support@jobboard.com'
+
+LOGIN_REDIRECT_URL = '/'

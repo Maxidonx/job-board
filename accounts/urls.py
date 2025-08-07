@@ -16,7 +16,9 @@ urlpatterns = [
     path('register/company/', views.company_signup, name='company_signup'),
 
     # The URL for the success page after registration (e.g., /accounts/register/success/)
-    path('register/success/', views.register_success, name='register_success'),
-    path('verify/<str:uidb64>/<str:token>/', views.verify_email, name='verify_email'),
-    path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
+    # path('register/success/', views.register_success, name='register_success'),
+    # path('verify/<str:uidb64>/<str:token>/', views.verify_email, name='verify_email'),
+    path('login/', views.login_view, name='login'),
+    path('dashboard/applicant/', views.applicant_dashboard, name='applicant_dashboard'),
+    path('logout/', views.logout_view, name='logout'),
 ]
